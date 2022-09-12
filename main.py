@@ -1,1 +1,16 @@
-from app import app
+from api import create_api, db
+from api.models import User, Task
+
+api = create_api()
+
+# flask shell context preimports app, the db and models
+# use flask shell to run it on the command line
+@api.shell_context_processor
+def make_shell_context():
+    return {'db': db, 'User': User, 'Task': Task}
+
+
+
+
+
+
