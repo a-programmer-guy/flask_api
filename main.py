@@ -1,10 +1,10 @@
 from api import create_api, db
-from api.models import User, Task
+from api.models.models import User, Task
 
 api = create_api()
 
 if __name__ == '__main__':
-    api.run(debug=True, use_reloader=True)
+    api.run(use_reloader=True)
 
 # flask shell context preimports app, the db and models
 # use flask shell to run it on the command line

@@ -31,5 +31,5 @@ def create_api(config_class=Config):
 def get_locale():
     return request.accept_languages.best_match(current_app.config['LANGUAGES'])
 
-from api import  models
+from api.models import  models
 

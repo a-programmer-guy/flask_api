@@ -28,6 +28,7 @@ class User(UserMixin, db.Model):
   def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+  # Build a dict object of our user to send back to client
   def to_dict(self, include_email=False):
     data = {
       'id': self.id,
@@ -37,6 +38,7 @@ class User(UserMixin, db.Model):
       data['email'] = self.email
     return data
 
+  # new_user argument to check if we are registering a new user or updating user
   def from_dict(self, data, new_user=False):
     for field in ['username', 'email']:
       if field in data:

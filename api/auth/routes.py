@@ -4,8 +4,8 @@ from flask_login import login_user, logout_user, current_user
 from flask_babel import _
 from api import db
 from api.auth import bp
-from api.models import User
-from api.errors import bad_request
+from api.models.models import User
+from api.errors.errors import bad_request
 
 
 
@@ -29,11 +29,11 @@ def get_followed(id):
 def create_user():
     data = request.get_json() or {}
     if 'username' not in data or 'email' not in data or 'password' not in data:
-        return bad_request('must include username, email and password fields')
+        return bad_request('Missing information! Please include username, email and password fields')
     if User.query.filter_by(username=data['username']).first():
-        return bad_request('please use a different username')
+        return bad_request('That username is already in use')
     if User.query.filter_by(email=data['email']).first():
-        return bad_request('please use a different email address')
+        return bad_request('That email address is already in use.')
     user = User()
     user.from_dict(data, new_user=True)
     db.session.add(user)
@@ -45,4 +45,14 @@ def create_user():
 
 @bp.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):
-    pass
+    user = User.query.get_or_404(int(id))
+    data = request.get_json() or {}
+    if 'username' in data and data['username'] != user.username and \
+        User.query.filter_by(username=data['username']).first():
+        return bad_request('Username is incorrect')
+    if 'email' in data and data['email'] != user.email and \
+        User.query.filter_by(email=data['email']).first():
+        return bad_request('Incorrect email address')
+    user.from_dict(data, new_user=False)
+    db.session.commit()
+    return jsonify(user.to_dict())
