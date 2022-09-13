@@ -1,3 +1,4 @@
+from sys import prefix
 from flask import Flask, request, current_app
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
@@ -21,10 +22,11 @@ def create_api(config_class=Config):
   babel.init_app(api)
 
   from api.auth import bp as auth_bp
+  from api.main import api as api_bp
   api.register_blueprint(auth_bp, url_prefix='/auth')
+  api.register_blueprint(api_bp, prefix=('/'))
 
   return api
-
 @babel.localeselector
 def get_locale():
     return request.accept_languages.best_match(current_app.config['LANGUAGES'])
