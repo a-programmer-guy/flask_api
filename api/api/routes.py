@@ -1,11 +1,12 @@
-from flask import redirect, request, jsonify, url_for
+from flask import redirect, request, jsonify, url_for, abort
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_babel import _
 from api import db
-from api.auth import bp
+from api.api import bp
 from api.models.models import User
 from api.errors.errors import bad_request
+from api.api.auth import token_auth
 
 
 
@@ -15,7 +16,7 @@ def get_user(id):
 
 @bp.route('/users', methods=['GET'])
 def get_users():
-    pass
+    return jsonify({ 'msg' : 'hello'})
 
 @bp.route('/users/<int:id>/followers', methods=['GET'])
 def get_followers(id):
@@ -45,6 +46,8 @@ def create_user():
 
 @bp.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):
+    if token_auth.current_user().id != id:
+        abort(403)
     user = User.query.get_or_404(int(id))
     data = request.get_json() or {}
     if 'username' in data and data['username'] != user.username and \

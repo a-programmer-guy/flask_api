@@ -21,10 +21,10 @@ def create_api(config_class=Config):
   migrate.init_app(api, db)
   babel.init_app(api)
 
-  from api.auth import bp as auth_bp
-  from api.main import api as api_bp
-  api.register_blueprint(auth_bp, url_prefix='/auth')
-  api.register_blueprint(api_bp, prefix=('/'))
+  from api.api import bp as api_bp
+  # from api.main import api as api_bp
+  api.register_blueprint(api_bp, url_prefix='/api')
+  # api.register_blueprint(api_bp, prefix=('/'))
 
   return api
 @babel.localeselector
