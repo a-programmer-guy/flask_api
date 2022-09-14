@@ -1,6 +1,6 @@
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from api.models.models import User
-from api.errors.errors import error_response
+from api.api.errors import error_response
 
 # HTTPBasicAuth implements the basic authentication flow
 basic_auth = HTTPBasicAuth()
